@@ -4,7 +4,8 @@ library(shiny)
 library(lubridate)
 
 # Load the datasets (change to your path)
-# you can also move the data folder into your working directory, remove the path and just use 'the "/data/{file name}.csv" as the path
+# you can also move the data folder into your working directory, remove the path and just use 
+# the "/data/{file name}.csv" as the path
 adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/advanced.csv")
 team_trad_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_traditional.csv")
 team_adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_advanced.csv")
