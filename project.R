@@ -6,12 +6,12 @@ library(shinythemes)
 # https://rstudio.github.io/shinythemes/
 
 # Load the datasets (change to your path)
-# you can also move the data folder into your working directory, remove the path and just use 
-# the "/data/{file name}.csv" relative path instead of using an absolute path
-adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/advanced.csv")
-team_trad_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_traditional.csv")
-team_adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_advanced.csv")
-trad_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/traditional.csv")
+# new paths: move the data folder into your working directory, and just use 
+# the "data/{file name}.csv" relative path instead of using an absolute path, which makes it easier to work with. 
+adv_data <- read_csv("data/advanced.csv")
+team_trad_data <- read_csv("data/team_traditional.csv")
+team_adv_data <- read_csv("data/team_advanced.csv")
+trad_data <- read_csv("data/traditional.csv")
 
 # Step 1: Handle Missing Data and Ensure Correct Data Types
 
