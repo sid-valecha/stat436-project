@@ -3,9 +3,10 @@ library(tidyverse)
 library(shiny)
 library(lubridate)
 
+
 # Load the datasets (change to your path)
 # you can also move the data folder into your working directory, remove the path and just use 
-# the "/data/{file name}.csv" as the path
+# the "/data/{file name}.csv" relative path instead of using an absolute path
 adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/advanced.csv")
 team_trad_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_traditional.csv")
 team_adv_data <- read_csv("/Users/sidvalecha/Desktop/Fall 2024/Stat 436/project/data/team_advanced.csv")
@@ -78,32 +79,43 @@ opponent_choices <- bucks_team_data %>%
 # Shiny UI
 ui <- fluidPage(
   titlePanel("Milwaukee Bucks Performance Analysis"),
-  tabsetPanel(
-    tabPanel("Player Analysis",
-             sidebarPanel(
-               selectInput("player", "Select Player", choices = setNames(player_choices$playerid, player_choices$player))
-             ),
-             mainPanel(
-               tabsetPanel(
-                 tabPanel("Scoring Trends", plotOutput("scoring_trend")),
-                 tabPanel("Shooting Efficiency", plotOutput("shooting_efficiency")),
-                 tabPanel("Turnover Comparison", plotOutput("turnover_comparison"))
-               )
-             )
+
+  # Player Analysis Panel
+  h3("Player Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("player", "Select Player", choices = setNames(player_choices$playerid, player_choices$player)),
+      helpText("Explore individual player trends for scoring, shooting efficiency, and turnovers.")
     ),
-    tabPanel("Team Analysis",
-             sidebarPanel(
-               selectInput("opponent", "Select Opponent", choices = opponent_choices$opponent)
-             ),
-             mainPanel(
-               tabsetPanel(
-                 tabPanel("Offensive Rating Comparison", plotOutput("off_rating_vs_opponent")),
-                 tabPanel("Defensive Rating Comparison", plotOutput("def_rating_vs_opponent")),
-                 tabPanel("League Average Comparison", plotOutput("league_avg_comparison"))
-               )
-             )
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Scoring Trends", plotOutput("scoring_trend")),
+        tabPanel("Shooting Efficiency", plotOutput("shooting_efficiency")),
+        tabPanel("Turnover Trends", plotOutput("turnover_comparison"))
+      )
+    )
+  ),
+  
+  
+  # Spacer
+  br(), hr(), br(),
+  
+  # Team Analysis Panel
+  h3("Team Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("opponent", "Select Opponent", choices = opponent_choices$opponent),
+      helpText("Analyze team performance metrics against selected opponents.")
+    ),
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Offensive Rating Comparison", plotOutput("off_rating_vs_opponent")),
+        tabPanel("Defensive Rating Comparison", plotOutput("def_rating_vs_opponent")),
+        tabPanel("League Average Comparison", plotOutput("league_avg_comparison"))
+      )
     )
   )
+  
 )
 
 # Server Logic
