@@ -5,9 +5,9 @@ library(lubridate)
 library(shinythemes)
 # https://rstudio.github.io/shinythemes/
 
-# Load the datasets (change to your path)
-# new paths: move the data folder into your working directory, and just use 
-# the "data/{file name}.csv" relative path instead of using an absolute path, which makes it easier to work with. 
+# Load the datasets
+# move the data folder into your working directory, and just use the "data/{file name}.csv" relative path 
+# instead of using an absolute path. 
 adv_data <- read_csv("data/advanced.csv")
 team_trad_data <- read_csv("data/team_traditional.csv")
 team_adv_data <- read_csv("data/team_advanced.csv")
