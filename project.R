@@ -3,11 +3,14 @@ library(tidyverse)
 library(shiny)
 library(lubridate)
 library(shinythemes)
+library(rsconnect)
+library(plotly)
+
 # https://rstudio.github.io/shinythemes/
 
-# Load the datasets
-# move the data folder into your working directory, and just use the "data/{file name}.csv" relative path 
-# instead of using an absolute path. 
+# Load the datasets (change to your path)
+# new paths: move the data folder into your working directory, and just use 
+# the "data/{file name}.csv" relative path instead of using an absolute path, which makes it easier to work with. 
 adv_data <- read_csv("data/advanced.csv")
 team_trad_data <- read_csv("data/team_traditional.csv")
 team_adv_data <- read_csv("data/team_advanced.csv")
@@ -151,7 +154,7 @@ ui <- fluidPage(
         tabsetPanel(
           tabPanel("Offensive Rating Comparison", plotOutput("off_rating_vs_opponent")),
           tabPanel("Defensive Rating Comparison", plotOutput("def_rating_vs_opponent")),
-          tabPanel("League Average Comparison", plotOutput("league_avg_comparison"))
+          tabPanel("League Average Comparison", plotlyOutput("league_avg_comparison"))
         )
       )
     )
@@ -239,31 +242,50 @@ server <- function(input, output) {
   })
   
   # 3. League Average Comparison Plot
-  output$league_avg_comparison <- renderPlot({
-    league_avg_data <- bucks_team_data %>%
+  output$league_avg_comparison <- renderPlotly({
+
+    league_avg_data <- team_combined %>%
       group_by(date) %>%
-      summarise(league_off_rating = mean(OFFRTG, na.rm = TRUE), league_def_rating = mean(DEFRTG, na.rm = TRUE))
+      summarise(
+        league_off_rating = mean(OFFRTG, na.rm = TRUE),
+        league_def_rating = mean(DEFRTG, na.rm = TRUE)
+      )
     
-    bucks_data <- bucks_team_data %>% filter(team == "MIL")
+
+    bucks_data <- bucks_team_data %>% filter(teamid == "1610612749")
     
-    ggplot() +
-      geom_line(data = league_avg_data, aes(x = date, y = league_off_rating), color = "grey", linetype = "dotted", size = 1) +
-      geom_line(data = bucks_data, aes(x = date, y = OFFRTG), color = "#00471B", size = 1.2) +
-      geom_line(data = league_avg_data, aes(x = date, y = league_def_rating), color = "grey", linetype = "dashed", size = 1) +
-      geom_line(data = bucks_data, aes(x = date, y = DEFRTG), color = "#0077c0", size = 1.2) +
+
+    p <- ggplot() +
+
+      geom_line(data = league_avg_data, aes(x = date, y = league_off_rating, color = "League Avg Offense", linetype = "League Avg Offense"), size = 0.5) +
+      geom_line(data = league_avg_data, aes(x = date, y = league_def_rating, color = "League Avg Defense", linetype = "League Avg Defense"), size = 0.5) +
+
+      geom_line(data = bucks_data, aes(x = date, y = OFFRTG, color = "Bucks Offense", linetype = "Bucks Offense"), size = 0.5) +
+      geom_line(data = bucks_data, aes(x = date, y = DEFRTG, color = "Bucks Defense", linetype = "Bucks Defense"), size = 0.5) +
+
+      scale_color_manual(values = c("League Avg Offense" = "orange", "Bucks Offense" = "#00471B", "League Avg Defense" = "purple", "Bucks Defense" = "#0077c0")) +
+      scale_linetype_manual(values = c("League Avg Offense" = "solid", "Bucks Offense" = "solid", "League Avg Defense" = "solid", "Bucks Defense" = "solid")) +
       labs(
         title = "League vs Milwaukee Bucks: Offensive and Defensive Ratings",
         x = "Date",
-        y = "Rating"
+        y = "Rating",
+        color = "Legend",
+        linetype = "Legend"
       ) +
       theme_minimal() +
       theme(
         plot.title = element_text(color = "#00471B", size = 16, face = "bold", hjust = 0.5),
         axis.title = element_text(color = "#00471B")
       )
+    ggplotly(p)
   })
   
 }
 
 #run app
 shinyApp(ui = ui, server = server)
+
+
+
+
+
